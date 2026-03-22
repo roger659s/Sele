@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para mi futura Dra. Vega</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* VARIABLES DE COLOR - Tonos suaves, pastel y calmantes */
+        :root {
+            --bg-color: #FCFCFA;
+            --text-color: #4A4A4A;
+            --accent-color: #E2CFB6; /* Beige suave */
+            --secondary-bg: #F4F1ED;
+            --success-color: #C1D5C0; /* Verde pastel */
+        }
+
+        /* ESTILOS BASE */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        h1, h2, h3 {
+            font-weight: 300;
+            letter-spacing: -0.5px;
+        }
+
+        p {
+            font-weight: 300;
+            font-size: 1.1rem;
+            color: #666;
+        }
+
+        /* UTILIDADES DE ANIMACIÓN */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 1.2s ease-out, transform 1.2s ease-out;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* SECCIONES */
+        section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem 5%;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+        }
+
+        /* HERO SECTION */
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+        .hero p {
+            font-size: 1.3rem;
+            color: #777;
+        }
+
+        /* CONTADOR */
+        .countdown-wrapper {
+            background-color: var(--secondary-bg);
+            padding: 3rem 2rem;
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+            width: 100%;
+        }
+        .countdown-timer {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        .time-box {
+            display: flex;
+            flex-direction: column;
+        }
+        .time-box span.number {
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+        .time-box span.label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #888;
+        }
+
+        /* BOTÓN DE ÁNIMO */
+        .btn {
+            background-color: var(--accent-color);
+            color: #333;
+            border: none;
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            margin-top: 1rem;
+            box-shadow: 0 4px 15px rgba(226, 207, 182, 0.4);
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(226, 207, 182, 0.6);
+        }
+        .btn:active {
+            transform: translateY(0);
+        }
+        #animo-text {
+            min-height: 60px;
+            margin-top: 2rem;
+            font-size: 1.3rem;
+            font-style: italic;
+            color: #555;
+            transition: opacity 0.5s ease;
+        }
+
+        /* RESPIRACIÓN GUIADA */
+        .breathe-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3rem;
+        }
+        .circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background-color: var(--accent-color);
+            opacity: 0.6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 4s ease-in-out;
+            box-shadow: 0 0 40px rgba(226, 207, 182, 0.5);
+        }
+        .circle.inhale {
+            transform: scale(1.6);
+        }
+        .circle.exhale {
+            transform: scale(1);
+        }
+        #breathe-text {
+            font-size: 1.5rem;
+            font-weight: 300;
+            color: #555;
+        }
+
+        /* CHECKLIST */
+        .checklist {
+            background: #fff;
+            padding: 2.5rem;
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+            text-align: left;
+        }
+        .checklist h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .task {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.2rem;
+            padding-bottom: 1.2rem;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+        }
+        .task:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        .task input[type="checkbox"] {
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--accent-color);
+            border-radius: 50%;
+            margin-right: 15px;
+            outline: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+        .task input[type="checkbox"]:checked {
+            background-color: var(--success-color);
+            border-color: var(--success-color);
+        }
+        .task input[type="checkbox"]:checked::after {
+            content: '✓';
+            position: absolute;
+            color: white;
+            font-size: 14px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .task label {
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: color 0.3s ease;
+        }
+        .task input[type="checkbox"]:checked + label {
+            color: #aaa;
+            text-decoration: line-through;
+        }
+        #checklist-feedback {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #6b8e6a; /* Verde oscuro suave */
+            min-height: 24px;
+            font-weight: 400;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        /* FOOTER / MENSAJE FINAL */
+        footer {
+            padding: 4rem 2rem;
+            text-align: center;
+            background-color: var(--secondary-bg);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 600px) {
+            .hero h1 { font-size: 2.2rem; }
+            .time-box span.number { font-size: 1.8rem; }
+            .circle { width: 120px; height: 120px; }
+        }
+    </style>
+</head>
+<body>
+
+    <section class="hero fade-in">
+        <div class="container">
+            <h1>Mi futura Dra. Vega</h1>
+            <p>Amor, puedes con esto. Todo el esfuerzo que estás haciendo tiene sentido.</p>
+        </div>
+    </section>
+
+    <section class="fade-in">
+        <div class="container countdown-wrapper">
+            <h2>El gran día</h2>
+            <p style="margin-top: 10px;">Aún tienes tiempo, y lo estás aprovechando maravillosamente. Paso a paso.</p>
+            
+            <div class="countdown-timer" id="countdown">
+                <div class="time-box">
+                    <span class="number" id="days">00</span>
+                    <span class="label">Días</span>
+                </div>
+                <div class="time-box">
+                    <span class="number" id="hours">00</span>
+                    <span class="label">Horas</span>
+                </div>
+                <div class="time-box">
+                    <span class="number" id="minutes">00</span>
+                    <span class="label">Min</span>
+                </div>
+                <div class="time-box">
+                    <span class="number" id="seconds">00</span>
+                    <span class="label">Seg</span>
+                </div>
+            </div>
+            <p>Vas a conseguir entrar en medicina. Confío en ti al 100%.</p>
+        </div>
+    </section>
+
+    <section class="fade-in">
+        <div class="container">
+            <h2>¿Un momento de bajón?</h2>
+            <p style="margin-bottom: 2rem;">Púlsame cuando sientas que la biología o la química se ponen pesadas.</p>
+            <button class="btn" onclick="mostrarAnimo()">Necesito ánimo, amor</button>
+            <div id="animo-text"></div>
+        </div>
+    </section>
+
+    <section class="fade-in">
+        <div class="container breathe-container">
+            <h2>Respira, aún hay tiempo</h2>
+            <p>Sigue el círculo. Regálate un minuto para calmar la mente. Tú dominas el temario, no él a ti.</p>
+            
+            <div class="circle" id="breathe-circle"></div>
+            <div id="breathe-text">Inhala...</div>
+        </div>
+    </section>
+
+    <section class="fade-in">
+        <div class="container">
+            <div class="checklist">
+                <h2>Pequeñas victorias de hoy</h2>
+                <p style="text-align: center; margin-bottom: 2rem;">No mires la montaña entera, céntrate en el siguiente paso.</p>
+                
+                <div class="task">
+                    <input type="checkbox" id="task1" onchange="checkTask()">
+                    <label for="task1">Repasar un bloque de Biología</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" id="task2" onchange="checkTask()">
+                    <label for="task2">Hacer ejercicios de Química</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" id="task3" onchange="checkTask()">
+                    <label for="task3">Beber agua y estirar el cuerpo</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" id="task4" onchange="checkTask()">
+                    <label for="task4">Descansar sin sentir culpa (¡Importante!)</label>
+                </div>
+
+                <div id="checklist-feedback">¡Eso es, amor! Un pasito más cerca.</div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="fade-in">
+        <div class="container">
+            <h2>Estoy súper orgulloso de ti</h2>
+            <p style="margin-top: 1rem;">Célula a célula, reacción a reacción. Lo estás haciendo bien.</p>
+            <p style="margin-top: 2rem; font-size: 0.9rem;">Hecho con todo mi amor para mi futura médica favorita. ❤️</p>
+        </div>
+    </footer>
+
+    <script>
+        // 1. SCROLL REVEAL (Animaciones al hacer scroll)
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.15
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(section => {
+            observer.observe(section);
+        });
+
+        // Hacemos visible el Hero section inmediatamente
+        setTimeout(() => {
+            document.querySelector('.hero').classList.add('visible');
+        }, 100);
+
+        // 2. CONTADOR HASTA EL 9 DE JUNIO
+        // Configuramos la fecha: 9 de Junio del año actual (o próximo si ya pasó)
+        const hoy = new Date();
+        let anioSelectividad = hoy.getFullYear();
+        let targetDate = new Date(`June 9, ${anioSelectividad} 00:00:00`).getTime();
+        
+        if (hoy.getTime() > targetDate) {
+            targetDate = new Date(`June 9, ${anioSelectividad + 1} 00:00:00`).getTime();
+        }
+
+        const countdownInterval = setInterval(() => {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            if (distance < 0) {
+                clearInterval(countdownInterval);
+                document.getElementById("countdown").innerHTML = "<h3>¡ES HOY! ¡A POR TODAS, AMOR!</h3>";
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            // Añadir ceros a la izquierda
+            document.getElementById("days").innerText = days.toString().padStart(2, '0');
+            document.getElementById("hours").innerText = hours.toString().padStart(2, '0');
+            document.getElementById("minutes").innerText = minutes.toString().padStart(2, '0');
+            document.getElementById("seconds").innerText = seconds.toString().padStart(2, '0');
+        }, 1000);
+
+        // 3. BOTÓN DE ÁNIMO (Frases aleatorias)
+        const frasesAnimo = [
+            "Amor, puedes con esto. Eres más lista de lo que crees.",
+            "Visualiza la bata blanca. Te va a quedar genial.",
+            "Un mal día de estudio no define tu capacidad. Respira.",
+            "Lo estás haciendo bien. No seas tan dura contigo misma.",
+            "Cada tema que repasas es una vida que salvarás en el futuro.",
+            "Recuerda por qué empezaste. Tienes madera de doctora.",
+            "Estoy aquí para ti, siempre. Cierra los libros 5 minutos y ven a darme un abrazo (o imagínalo).",
+            "La selectividad es solo un trámite, tu talento es para siempre."
+        ];
+
+        function mostrarAnimo() {
+            const textElement = document.getElementById('animo-text');
+            textElement.style.opacity = 0;
+            
+            setTimeout(() => {
+                const randomIndex = Math.floor(Math.random() * frasesAnimo.length);
+                textElement.innerText = `"${frasesAnimo[randomIndex]}"`;
+                textElement.style.opacity = 1;
+            }, 300);
+        }
+
+        // 4. RESPIRACIÓN GUIADA
+        const breatheCircle = document.getElementById('breathe-circle');
+        const breatheText = document.getElementById('breathe-text');
+        
+        function breatheAnimation() {
+            breatheText.innerText = "Inhala...";
+            breatheCircle.classList.remove('exhale');
+            breatheCircle.classList.add('inhale');
+
+            setTimeout(() => {
+                breatheText.innerText = "Exhala... Todo está bajo control";
+                breatheCircle.classList.remove('inhale');
+                breatheCircle.classList.add('exhale');
+            }, 4000); // 4 segundos inhalando, 4 exhalando
+        }
+        
+        // Iniciar ciclo de respiración
+        breatheAnimation();
+        setInterval(breatheAnimation, 8000);
+
+        // 5. CHECKLIST FEEDBACK
+        const mensajesChecklist = [
+            "¡Muy bien, amor! Tachando tareas.",
+            "¡Eres una máquina! Sigue así.",
+            "Un pasito más cerca de la facultad de Medicina.",
+            "¡Orgulloso de ti! Tarea completada."
+        ];
+
+        function checkTask() {
+            const feedback = document.getElementById('checklist-feedback');
+            const randomIndex = Math.floor(Math.random() * mensajesChecklist.length);
+            
+            feedback.innerText = mensajesChecklist[randomIndex];
+            feedback.style.opacity = 1;
+
+            // Ocultar el mensaje después de 3 segundos
+            setTimeout(() => {
+                feedback.style.opacity = 0;
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
