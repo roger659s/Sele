@@ -28,7 +28,7 @@
             color: var(--text-color);
             line-height: 1.6;
             overflow-x: hidden;
-            scroll-behavior: smooth;
+            scroll-behavior: smooth; /* Desplazamiento suave nativo */
         }
 
         h1, h2, h3 {
@@ -63,6 +63,7 @@
             align-items: center;
             padding: 2rem 5%;
             text-align: center;
+            position: relative; /* Para posicionar elementos absolutos como la flecha */
         }
 
         .container {
@@ -79,6 +80,34 @@
         .hero p {
             font-size: 1.3rem;
             color: #777;
+        }
+
+        /* FLECHA DE SCROLL */
+        .scroll-arrow {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            cursor: pointer;
+            color: #999;
+            animation: bounce 2.5s infinite;
+            transition: color 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        
+        .scroll-arrow:hover {
+            color: #555;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translate(-50%, 0); }
+            40% { transform: translate(-50%, -10px); }
+            60% { transform: translate(-50%, -5px); }
         }
 
         /* CONTADOR */
@@ -263,9 +292,16 @@
             <h1>Mi futura Dra. Vega</h1>
             <p>Amor, puedes con esto. Todo el esfuerzo que estás haciendo tiene sentido.</p>
         </div>
+        
+        <div class="scroll-arrow" onclick="scrollToNext()">
+            <span style="margin-bottom: 8px;">Baja un poquito</span>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+        </div>
     </section>
 
-    <section class="fade-in">
+    <section id="seccion-contador" class="fade-in">
         <div class="container countdown-wrapper">
             <h2>El gran día</h2>
             <p style="margin-top: 10px;">Aún tienes tiempo, y lo estás aprovechando maravillosamente. Paso a paso.</p>
@@ -348,7 +384,13 @@
     </footer>
 
     <script>
-        // 1. SCROLL REVEAL (Animaciones al hacer scroll)
+        // 1. FUNCIÓN PARA LA FLECHA DE SCROLL
+        function scrollToNext() {
+            const nextSection = document.getElementById('seccion-contador');
+            nextSection.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // 2. SCROLL REVEAL (Animaciones al hacer scroll)
         const observerOptions = {
             root: null,
             rootMargin: '0px',
@@ -372,8 +414,7 @@
             document.querySelector('.hero').classList.add('visible');
         }, 100);
 
-        // 2. CONTADOR HASTA EL 9 DE JUNIO
-        // Configuramos la fecha: 9 de Junio del año actual (o próximo si ya pasó)
+        // 3. CONTADOR HASTA EL 9 DE JUNIO
         const hoy = new Date();
         let anioSelectividad = hoy.getFullYear();
         let targetDate = new Date(`June 9, ${anioSelectividad} 00:00:00`).getTime();
@@ -397,14 +438,13 @@
             const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-            // Añadir ceros a la izquierda
             document.getElementById("days").innerText = days.toString().padStart(2, '0');
             document.getElementById("hours").innerText = hours.toString().padStart(2, '0');
             document.getElementById("minutes").innerText = minutes.toString().padStart(2, '0');
             document.getElementById("seconds").innerText = seconds.toString().padStart(2, '0');
         }, 1000);
 
-        // 3. BOTÓN DE ÁNIMO (Frases aleatorias)
+        // 4. BOTÓN DE ÁNIMO (Frases aleatorias)
         const frasesAnimo = [
             "Amor, puedes con esto. Eres más lista de lo que crees.",
             "Visualiza la bata blanca. Te va a quedar genial.",
@@ -427,7 +467,7 @@
             }, 300);
         }
 
-        // 4. RESPIRACIÓN GUIADA
+        // 5. RESPIRACIÓN GUIADA
         const breatheCircle = document.getElementById('breathe-circle');
         const breatheText = document.getElementById('breathe-text');
         
@@ -440,14 +480,13 @@
                 breatheText.innerText = "Exhala... Todo está bajo control";
                 breatheCircle.classList.remove('inhale');
                 breatheCircle.classList.add('exhale');
-            }, 4000); // 4 segundos inhalando, 4 exhalando
+            }, 4000); 
         }
         
-        // Iniciar ciclo de respiración
         breatheAnimation();
         setInterval(breatheAnimation, 8000);
 
-        // 5. CHECKLIST FEEDBACK
+        // 6. CHECKLIST FEEDBACK
         const mensajesChecklist = [
             "¡Muy bien, amor! Tachando tareas.",
             "¡Eres una máquina! Sigue así.",
@@ -462,7 +501,6 @@
             feedback.innerText = mensajesChecklist[randomIndex];
             feedback.style.opacity = 1;
 
-            // Ocultar el mensaje después de 3 segundos
             setTimeout(() => {
                 feedback.style.opacity = 0;
             }, 3000);
