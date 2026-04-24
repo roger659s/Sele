@@ -5,14 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Para mi futura Dra. Vega</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
-        /* VARIABLES DE COLOR - Tonos suaves, pastel y calmantes */
+        /* VARIABLES DE COLOR - Tema Claro */
         :root {
             --bg-color: #FCFCFA;
             --text-color: #4A4A4A;
-            --accent-color: #E2CFB6; /* Beige suave */
+            --accent-color: #E2CFB6;
             --secondary-bg: #F4F1ED;
-            --success-color: #C1D5C0; /* Verde pastel */
+            --success-color: #C1D5C0;
+            --btn-text: #333;
+        }
+
+        /* VARIABLES DE COLOR - Tema Oscuro */
+        body.dark-mode {
+            --bg-color: #1a1a1a;
+            --text-color: #e0e0e0;
+            --accent-color: #5c4b37;
+            --secondary-bg: #2a2a2a;
+            --success-color: #3b523a;
+            --btn-text: #f0f0f0;
         }
 
         /* ESTILOS BASE */
@@ -24,23 +36,47 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background-color: var(--bg-color);
             color: var(--text-color);
             line-height: 1.6;
             overflow-x: hidden;
-            scroll-behavior: smooth; /* Desplazamiento suave nativo */
+            scroll-behavior: smooth;
+            /* Fondo con gradiente sutil animado */
+            background: linear-gradient(-45deg, var(--bg-color), var(--secondary-bg), var(--bg-color));
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            transition: background 0.5s ease, color 0.5s ease;
         }
 
-        h1, h2, h3 {
-            font-weight: 300;
-            letter-spacing: -0.5px;
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
-        p {
-            font-weight: 300;
-            font-size: 1.1rem;
-            color: #666;
+        h1, h2, h3 { font-weight: 300; letter-spacing: -0.5px; }
+        p { font-weight: 300; font-size: 1.1rem; opacity: 0.8; }
+
+        /* MODO OSCURO TOGGLE */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--secondary-bg);
+            border: 1px solid var(--accent-color);
+            color: var(--text-color);
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2rem;
         }
+        .theme-toggle:hover { transform: scale(1.1); }
 
         /* UTILIDADES DE ANIMACIÓN */
         .fade-in {
@@ -48,11 +84,7 @@
             transform: translateY(30px);
             transition: opacity 1.2s ease-out, transform 1.2s ease-out;
         }
-
-        .fade-in.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
+        .fade-in.visible { opacity: 1; transform: translateY(0); }
 
         /* SECCIONES */
         section {
@@ -63,24 +95,13 @@
             align-items: center;
             padding: 2rem 5%;
             text-align: center;
-            position: relative; /* Para posicionar elementos absolutos como la flecha */
+            position: relative;
         }
-
-        .container {
-            max-width: 600px;
-            width: 100%;
-        }
+        .container { max-width: 600px; width: 100%; }
 
         /* HERO SECTION */
-        .hero h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            color: #333;
-        }
-        .hero p {
-            font-size: 1.3rem;
-            color: #777;
-        }
+        .hero h1 { font-size: 3rem; margin-bottom: 1rem; }
+        .hero p { font-size: 1.3rem; }
 
         /* FLECHA DE SCROLL */
         .scroll-arrow {
@@ -89,9 +110,9 @@
             left: 50%;
             transform: translateX(-50%);
             cursor: pointer;
-            color: #999;
+            color: var(--text-color);
+            opacity: 0.5;
             animation: bounce 2.5s infinite;
-            transition: color 0.3s ease;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -99,193 +120,160 @@
             letter-spacing: 1px;
             text-transform: uppercase;
         }
-        
-        .scroll-arrow:hover {
-            color: #555;
-        }
-
         @keyframes bounce {
             0%, 20%, 50%, 80%, 100% { transform: translate(-50%, 0); }
             40% { transform: translate(-50%, -10px); }
             60% { transform: translate(-50%, -5px); }
         }
 
-        /* CONTADOR */
-        .countdown-wrapper {
+        /* TARJETAS GENERALES (Contador, Pomodoro, Checklist) */
+        .card {
             background-color: var(--secondary-bg);
             padding: 3rem 2rem;
             border-radius: 24px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
             width: 100%;
+            transition: background-color 0.5s ease;
         }
+
+        /* CONTADOR */
         .countdown-timer {
             display: flex;
             justify-content: center;
             gap: 1.5rem;
             margin: 2rem 0;
         }
-        .time-box {
-            display: flex;
-            flex-direction: column;
-        }
-        .time-box span.number {
-            font-size: 2.5rem;
-            font-weight: 600;
-            color: #333;
-        }
-        .time-box span.label {
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #888;
-        }
+        .time-box { display: flex; flex-direction: column; }
+        .time-box span.number { font-size: 2.5rem; font-weight: 600; }
+        .time-box span.label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; opacity: 0.6; }
 
-        /* BOTÓN DE ÁNIMO */
+        /* BOTONES GLOBALES */
         .btn {
             background-color: var(--accent-color);
-            color: #333;
+            color: var(--btn-text);
             border: none;
-            padding: 1rem 2.5rem;
-            font-size: 1.1rem;
+            padding: 0.8rem 2rem;
+            font-size: 1rem;
             border-radius: 50px;
             cursor: pointer;
             transition: all 0.3s ease;
             font-family: inherit;
-            margin-top: 1rem;
-            box-shadow: 0 4px 15px rgba(226, 207, 182, 0.4);
+            margin: 0.5rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(226, 207, 182, 0.6);
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.15); }
+        .btn:active { transform: translateY(0); }
+
+        /* POMODORO */
+        .pomodoro-display {
+            font-size: 4rem;
+            font-weight: 600;
+            margin: 1.5rem 0;
+            font-variant-numeric: tabular-nums;
         }
-        .btn:active {
-            transform: translateY(0);
-        }
+        .pomodoro-controls { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+
+        /* ÁNIMO */
         #animo-text {
             min-height: 60px;
             margin-top: 2rem;
             font-size: 1.3rem;
             font-style: italic;
-            color: #555;
             transition: opacity 0.5s ease;
         }
 
         /* RESPIRACIÓN GUIADA */
-        .breathe-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 3rem;
-        }
+        .breathe-container { display: flex; flex-direction: column; align-items: center; gap: 3rem; }
         .circle {
-            width: 150px;
-            height: 150px;
+            width: 150px; height: 150px;
             border-radius: 50%;
             background-color: var(--accent-color);
             opacity: 0.6;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            display: flex; justify-content: center; align-items: center;
             transition: transform 4s ease-in-out;
-            box-shadow: 0 0 40px rgba(226, 207, 182, 0.5);
+            box-shadow: 0 0 40px var(--accent-color);
         }
-        .circle.inhale {
-            transform: scale(1.6);
-        }
-        .circle.exhale {
-            transform: scale(1);
-        }
-        #breathe-text {
-            font-size: 1.5rem;
-            font-weight: 300;
-            color: #555;
-        }
+        .circle.inhale { transform: scale(1.6); }
+        .circle.exhale { transform: scale(1); }
+        #breathe-text { font-size: 1.5rem; font-weight: 300; }
 
-        /* CHECKLIST */
-        .checklist {
-            background: #fff;
-            padding: 2.5rem;
-            border-radius: 24px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.02);
-            text-align: left;
-        }
-        .checklist h2 {
-            text-align: center;
+        /* MÚSICA */
+        .spotify-container { margin-top: 2rem; border-radius: 12px; overflow: hidden; }
+
+        /* CHECKLIST DINÁMICO */
+        .checklist-input-group {
+            display: flex;
             margin-bottom: 2rem;
+            gap: 10px;
         }
+        .checklist-input-group input[type="text"] {
+            flex: 1;
+            padding: 10px 15px;
+            border-radius: 50px;
+            border: 1px solid var(--accent-color);
+            background: var(--bg-color);
+            color: var(--text-color);
+            font-family: inherit;
+            outline: none;
+        }
+        .task-list { text-align: left; list-style: none; padding: 0; }
         .task {
             display: flex;
             align-items: center;
             margin-bottom: 1.2rem;
             padding-bottom: 1.2rem;
-            border-bottom: 1px solid #eee;
-            cursor: pointer;
+            border-bottom: 1px solid var(--accent-color);
+            transition: all 0.3s ease;
         }
-        .task:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-            padding-bottom: 0;
-        }
+        .task:last-child { border-bottom: none; }
         .task input[type="checkbox"] {
             appearance: none;
-            width: 24px;
-            height: 24px;
+            width: 24px; height: 24px;
             border: 2px solid var(--accent-color);
             border-radius: 50%;
             margin-right: 15px;
-            outline: none;
-            cursor: pointer;
-            transition: all 0.2s ease;
+            outline: none; cursor: pointer;
             position: relative;
+            flex-shrink: 0;
         }
-        .task input[type="checkbox"]:checked {
-            background-color: var(--success-color);
-            border-color: var(--success-color);
-        }
+        .task input[type="checkbox"]:checked { background-color: var(--success-color); border-color: var(--success-color); }
         .task input[type="checkbox"]:checked::after {
-            content: '✓';
-            position: absolute;
-            color: white;
-            font-size: 14px;
-            top: 50%;
-            left: 50%;
+            content: '✓'; position: absolute; color: white;
+            font-size: 14px; top: 50%; left: 50%;
             transform: translate(-50%, -50%);
         }
-        .task label {
-            cursor: pointer;
-            font-size: 1.1rem;
-            transition: color 0.3s ease;
+        .task label { cursor: pointer; font-size: 1.1rem; transition: color 0.3s ease; flex: 1; word-break: break-word;}
+        .task input[type="checkbox"]:checked + label { opacity: 0.5; text-decoration: line-through; }
+        
+        .delete-btn {
+            background: transparent; border: none;
+            color: #ff6b6b; cursor: pointer;
+            font-size: 1.2rem; margin-left: 10px;
+            opacity: 0.5; transition: opacity 0.3s;
         }
-        .task input[type="checkbox"]:checked + label {
-            color: #aaa;
-            text-decoration: line-through;
-        }
+        .delete-btn:hover { opacity: 1; }
+
         #checklist-feedback {
-            text-align: center;
-            margin-top: 1.5rem;
-            color: #6b8e6a; /* Verde oscuro suave */
-            min-height: 24px;
-            font-weight: 400;
-            opacity: 0;
-            transition: opacity 0.5s ease;
+            text-align: center; margin-top: 1.5rem;
+            color: var(--success-color);
+            min-height: 24px; font-weight: 600;
+            opacity: 0; transition: opacity 0.5s ease;
         }
 
-        /* FOOTER / MENSAJE FINAL */
-        footer {
-            padding: 4rem 2rem;
-            text-align: center;
-            background-color: var(--secondary-bg);
-        }
+        /* FOOTER */
+        footer { padding: 4rem 2rem; text-align: center; background-color: var(--secondary-bg); }
 
-        /* RESPONSIVE */
         @media (max-width: 600px) {
             .hero h1 { font-size: 2.2rem; }
             .time-box span.number { font-size: 1.8rem; }
             .circle { width: 120px; height: 120px; }
+            .pomodoro-display { font-size: 3rem; }
         }
     </style>
 </head>
 <body>
+
+    <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn">🌙</button>
 
     <section class="hero fade-in">
         <div class="container">
@@ -293,7 +281,7 @@
             <p>Amor, puedes con esto. Todo el esfuerzo que estás haciendo tiene sentido.</p>
         </div>
         
-        <div class="scroll-arrow" onclick="scrollToNext()">
+        <div class="scroll-arrow" onclick="scrollToNext('seccion-contador')">
             <span style="margin-bottom: 8px;">Baja un poquito</span>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="6 9 12 15 18 9"></polyline>
@@ -302,36 +290,62 @@
     </section>
 
     <section id="seccion-contador" class="fade-in">
-        <div class="container countdown-wrapper">
+        <div class="container card">
             <h2>El gran día</h2>
-            <p style="margin-top: 10px;">Aún tienes tiempo, y lo estás aprovechando maravillosamente. Paso a paso.</p>
+            <p style="margin-top: 10px;">Aún tienes tiempo, y lo estás aprovechando maravillosamente.</p>
             
             <div class="countdown-timer" id="countdown">
-                <div class="time-box">
-                    <span class="number" id="days">00</span>
-                    <span class="label">Días</span>
-                </div>
-                <div class="time-box">
-                    <span class="number" id="hours">00</span>
-                    <span class="label">Horas</span>
-                </div>
-                <div class="time-box">
-                    <span class="number" id="minutes">00</span>
-                    <span class="label">Min</span>
-                </div>
-                <div class="time-box">
-                    <span class="number" id="seconds">00</span>
-                    <span class="label">Seg</span>
-                </div>
+                <div class="time-box"><span class="number" id="days">00</span><span class="label">Días</span></div>
+                <div class="time-box"><span class="number" id="hours">00</span><span class="label">Horas</span></div>
+                <div class="time-box"><span class="number" id="minutes">00</span><span class="label">Min</span></div>
+                <div class="time-box"><span class="number" id="seconds">00</span><span class="label">Seg</span></div>
             </div>
-            <p>Vas a conseguir entrar en medicina. Confío en ti al 100%.</p>
+            <p>Confío en ti al 100%.</p>
+        </div>
+    </section>
+
+    <section class="fade-in">
+        <div class="container card">
+            <h2>Sesión de Estudio</h2>
+            <p>Céntrate solo en los próximos 25 minutos.</p>
+            
+            <div class="pomodoro-display" id="pomodoro-time">25:00</div>
+            <p id="pomodoro-status" style="margin-bottom: 1rem; font-weight: 600; color: var(--success-color);"></p>
+            
+            <div class="pomodoro-controls">
+                <button class="btn" onclick="startPomodoro()">Empezar</button>
+                <button class="btn" onclick="pausePomodoro()">Pausar</button>
+                <button class="btn" onclick="resetPomodoro()">25 min</button>
+                <button class="btn" onclick="setBreak()">5 min</button>
+            </div>
+
+            <div class="spotify-container">
+                <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/0vvXsWCC9xrXsKd4Zsnsnj?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+            </div>
+        </div>
+    </section>
+
+    <section class="fade-in">
+        <div class="container card">
+            <h2>Pequeñas victorias de hoy</h2>
+            <p style="margin-bottom: 2rem;">No mires la montaña entera, céntrate en el siguiente paso.</p>
+            
+            <div class="checklist-input-group">
+                <input type="text" id="new-task-input" placeholder="Añadir un tema, ejercicio..." onkeypress="handleKeyPress(event)">
+                <button class="btn" style="margin:0;" onclick="addTask()">Añadir</button>
+            </div>
+
+            <ul class="task-list" id="task-list">
+                </ul>
+
+            <div id="checklist-feedback"></div>
         </div>
     </section>
 
     <section class="fade-in">
         <div class="container">
             <h2>¿Un momento de bajón?</h2>
-            <p style="margin-bottom: 2rem;">Púlsame cuando sientas que la biología o la química se ponen pesadas.</p>
+            <p style="margin-bottom: 2rem;">Púlsame cuando la biología o la química se pongan pesadas.</p>
             <button class="btn" onclick="mostrarAnimo()">Necesito ánimo, amor</button>
             <div id="animo-text"></div>
         </div>
@@ -339,39 +353,10 @@
 
     <section class="fade-in">
         <div class="container breathe-container">
-            <h2>Respira, aún hay tiempo</h2>
-            <p>Sigue el círculo. Regálate un minuto para calmar la mente. Tú dominas el temario, no él a ti.</p>
-            
+            <h2>Respira, tienes el control</h2>
+            <p>Regálate un minuto para calmar la mente. Tú dominas el temario.</p>
             <div class="circle" id="breathe-circle"></div>
             <div id="breathe-text">Inhala...</div>
-        </div>
-    </section>
-
-    <section class="fade-in">
-        <div class="container">
-            <div class="checklist">
-                <h2>Pequeñas victorias de hoy</h2>
-                <p style="text-align: center; margin-bottom: 2rem;">No mires la montaña entera, céntrate en el siguiente paso.</p>
-                
-                <div class="task">
-                    <input type="checkbox" id="task1" onchange="checkTask()">
-                    <label for="task1">Repasar un bloque de Biología</label>
-                </div>
-                <div class="task">
-                    <input type="checkbox" id="task2" onchange="checkTask()">
-                    <label for="task2">Hacer ejercicios de Química</label>
-                </div>
-                <div class="task">
-                    <input type="checkbox" id="task3" onchange="checkTask()">
-                    <label for="task3">Beber agua y estirar el cuerpo</label>
-                </div>
-                <div class="task">
-                    <input type="checkbox" id="task4" onchange="checkTask()">
-                    <label for="task4">Descansar sin sentir culpa (¡Importante!)</label>
-                </div>
-
-                <div id="checklist-feedback">¡Eso es, amor! Un pasito más cerca.</div>
-            </div>
         </div>
     </section>
 
@@ -379,42 +364,47 @@
         <div class="container">
             <h2>Estoy súper orgulloso de ti</h2>
             <p style="margin-top: 1rem;">Célula a célula, reacción a reacción. Lo estás haciendo bien.</p>
-            <p style="margin-top: 2rem; font-size: 0.9rem;">Hecho con todo mi amor para mi futura médica favorita. ❤️</p>
+            <p style="margin-top: 2rem; font-size: 0.9rem; opacity: 0.6;">Hecho con todo mi amor para mi futura médica favorita. ❤️</p>
         </div>
     </footer>
 
     <script>
-        // 1. FUNCIÓN PARA LA FLECHA DE SCROLL
-        function scrollToNext() {
-            const nextSection = document.getElementById('seccion-contador');
-            nextSection.scrollIntoView({ behavior: 'smooth' });
+        // --- 1. MODO OSCURO ---
+        function toggleTheme() {
+            const body = document.body;
+            const btn = document.getElementById('theme-btn');
+            body.classList.toggle('dark-mode');
+            
+            if (body.classList.contains('dark-mode')) {
+                localStorage.setItem('theme', 'dark');
+                btn.innerText = '☀️';
+            } else {
+                localStorage.setItem('theme', 'light');
+                btn.innerText = '🌙';
+            }
         }
 
-        // 2. SCROLL REVEAL (Animaciones al hacer scroll)
-        const observerOptions = {
-            root: null,
-            rootMargin: '0px',
-            threshold: 0.15
-        };
+        // Cargar preferencia guardada
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark-mode');
+            document.getElementById('theme-btn').innerText = '☀️';
+        }
 
-        const observer = new IntersectionObserver((entries, observer) => {
+        // --- 2. SCROLL Y ANIMACIONES ---
+        function scrollToNext(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
+                if (entry.isIntersecting) entry.target.classList.add('visible');
             });
-        }, observerOptions);
+        }, { threshold: 0.15 });
 
-        document.querySelectorAll('.fade-in').forEach(section => {
-            observer.observe(section);
-        });
+        document.querySelectorAll('.fade-in').forEach(section => observer.observe(section));
+        setTimeout(() => document.querySelector('.hero').classList.add('visible'), 100);
 
-        // Hacemos visible el Hero section inmediatamente
-        setTimeout(() => {
-            document.querySelector('.hero').classList.add('visible');
-        }, 100);
-
-        // 3. CONTADOR HASTA EL 9 DE JUNIO
+        // --- 3. CONTADOR ---
         const hoy = new Date();
         let anioSelectividad = hoy.getFullYear();
         let targetDate = new Date(`June 9, ${anioSelectividad} 00:00:00`).getTime();
@@ -433,18 +423,153 @@
                 return;
             }
 
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-            document.getElementById("days").innerText = days.toString().padStart(2, '0');
-            document.getElementById("hours").innerText = hours.toString().padStart(2, '0');
-            document.getElementById("minutes").innerText = minutes.toString().padStart(2, '0');
-            document.getElementById("seconds").innerText = seconds.toString().padStart(2, '0');
+            document.getElementById("days").innerText = Math.floor(distance / (1000 * 60 * 60 * 24)).toString().padStart(2, '0');
+            document.getElementById("hours").innerText = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
+            document.getElementById("minutes").innerText = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
+            document.getElementById("seconds").innerText = Math.floor((distance % (1000 * 60)) / 1000).toString().padStart(2, '0');
         }, 1000);
 
-        // 4. BOTÓN DE ÁNIMO (Frases aleatorias)
+        // --- 4. POMODORO ---
+        let pomodoroTimer;
+        let timeLeft = 25 * 60; // 25 min en segundos
+        let isRunning = false;
+
+        function updateDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            document.getElementById('pomodoro-time').innerText = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function startPomodoro() {
+            if (isRunning) return;
+            isRunning = true;
+            pomodoroTimer = setInterval(() => {
+                if (timeLeft > 0) {
+                    timeLeft--;
+                    updateDisplay();
+                } else {
+                    clearInterval(pomodoroTimer);
+                    isRunning = false;
+                    document.getElementById('pomodoro-status').innerText = "¡Tiempo! Tómate un respiro, te lo has ganado.";
+                    // Efecto de sonido opcional o alerta visual
+                }
+            }, 1000);
+            document.getElementById('pomodoro-status').innerText = "Concentración a tope...";
+        }
+
+        function pausePomodoro() {
+            clearInterval(pomodoroTimer);
+            isRunning = false;
+            document.getElementById('pomodoro-status').innerText = "Pausado";
+        }
+
+        function resetPomodoro() {
+            clearInterval(pomodoroTimer);
+            isRunning = false;
+            timeLeft = 25 * 60;
+            updateDisplay();
+            document.getElementById('pomodoro-status').innerText = "";
+        }
+
+        function setBreak() {
+            clearInterval(pomodoroTimer);
+            isRunning = false;
+            timeLeft = 5 * 60;
+            updateDisplay();
+            document.getElementById('pomodoro-status').innerText = "Modo descanso activado.";
+        }
+        updateDisplay(); // Inicializar vista
+
+        // --- 5. CHECKLIST DINÁMICO & CONFETI ---
+        let tasks = JSON.parse(localStorage.getItem('vegaTasks')) || [
+            { id: 1, text: "Repasar un bloque de Biología", completed: false },
+            { id: 2, text: "Hacer ejercicios de Química", completed: false },
+            { id: 3, text: "Beber agua y estirar el cuerpo", completed: false }
+        ];
+
+        function saveTasks() {
+            localStorage.setItem('vegaTasks', JSON.stringify(tasks));
+        }
+
+        function renderTasks() {
+            const list = document.getElementById('task-list');
+            list.innerHTML = '';
+            
+            tasks.forEach(task => {
+                const li = document.createElement('li');
+                li.className = 'task';
+                li.innerHTML = `
+                    <input type="checkbox" id="task-${task.id}" ${task.completed ? 'checked' : ''} onchange="toggleTask(${task.id})">
+                    <label for="task-${task.id}">${task.text}</label>
+                    <button class="delete-btn" onclick="deleteTask(${task.id})">✖</button>
+                `;
+                list.appendChild(li);
+            });
+        }
+
+        function handleKeyPress(e) {
+            if (e.key === 'Enter') addTask();
+        }
+
+        function addTask() {
+            const input = document.getElementById('new-task-input');
+            const text = input.value.trim();
+            if (text === '') return;
+
+            tasks.push({ id: Date.now(), text: text, completed: false });
+            input.value = '';
+            saveTasks();
+            renderTasks();
+        }
+
+        function deleteTask(id) {
+            tasks = tasks.filter(t => t.id !== id);
+            saveTasks();
+            renderTasks();
+        }
+
+        function toggleTask(id) {
+            const task = tasks.find(t => t.id === id);
+            task.completed = !task.completed;
+            saveTasks();
+            renderTasks();
+
+            const feedback = document.getElementById('checklist-feedback');
+            if (task.completed) {
+                const mensajes = ["¡Muy bien, amor!", "¡Eres una máquina!", "Un pasito más cerca.", "¡Orgulloso de ti!"];
+                feedback.innerText = mensajes[Math.floor(Math.random() * mensajes.length)];
+                feedback.style.opacity = 1;
+                setTimeout(() => feedback.style.opacity = 0, 3000);
+            }
+
+            // CHECK CONFETI
+            const allCompleted = tasks.length > 0 && tasks.every(t => t.completed);
+            if (allCompleted && task.completed) {
+                lanzarConfeti();
+                feedback.innerText = "¡TODAS LAS TAREAS DE HOY! Eres increíble ❤️";
+                feedback.style.opacity = 1;
+            }
+        }
+
+        function lanzarConfeti() {
+            var duration = 3 * 1000;
+            var animationEnd = Date.now() + duration;
+            var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+            function randomInRange(min, max) { return Math.random() * (max - min) + min; }
+
+            var interval = setInterval(function() {
+                var timeLeft = animationEnd - Date.now();
+                if (timeLeft <= 0) return clearInterval(interval);
+                var particleCount = 50 * (timeLeft / duration);
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+            }, 250);
+        }
+
+        renderTasks(); // Renderizar al inicio
+
+        // --- 6. FRASES DE ÁNIMO ---
         const frasesAnimo = [
             "Amor, puedes con esto. Eres más lista de lo que crees.",
             "Visualiza la bata blanca. Te va a quedar genial.",
@@ -452,59 +577,34 @@
             "Lo estás haciendo bien. No seas tan dura contigo misma.",
             "Cada tema que repasas es una vida que salvarás en el futuro.",
             "Recuerda por qué empezaste. Tienes madera de doctora.",
-            "Estoy aquí para ti, siempre. Cierra los libros 5 minutos y ven a darme un abrazo (o imagínalo).",
+            "Estoy aquí para ti, siempre. Cierra los libros 5 minutos.",
             "La selectividad es solo un trámite, tu talento es para siempre."
         ];
 
         function mostrarAnimo() {
             const textElement = document.getElementById('animo-text');
             textElement.style.opacity = 0;
-            
             setTimeout(() => {
-                const randomIndex = Math.floor(Math.random() * frasesAnimo.length);
-                textElement.innerText = `"${frasesAnimo[randomIndex]}"`;
+                textElement.innerText = `"${frasesAnimo[Math.floor(Math.random() * frasesAnimo.length)]}"`;
                 textElement.style.opacity = 1;
             }, 300);
         }
 
-        // 5. RESPIRACIÓN GUIADA
+        // --- 7. RESPIRACIÓN ---
         const breatheCircle = document.getElementById('breathe-circle');
         const breatheText = document.getElementById('breathe-text');
         
         function breatheAnimation() {
             breatheText.innerText = "Inhala...";
-            breatheCircle.classList.remove('exhale');
-            breatheCircle.classList.add('inhale');
-
+            breatheCircle.classList.replace('exhale', 'inhale') || breatheCircle.classList.add('inhale');
             setTimeout(() => {
                 breatheText.innerText = "Exhala... Todo está bajo control";
-                breatheCircle.classList.remove('inhale');
-                breatheCircle.classList.add('exhale');
+                breatheCircle.classList.replace('inhale', 'exhale');
             }, 4000); 
         }
-        
         breatheAnimation();
         setInterval(breatheAnimation, 8000);
 
-        // 6. CHECKLIST FEEDBACK
-        const mensajesChecklist = [
-            "¡Muy bien, amor! Tachando tareas.",
-            "¡Eres una máquina! Sigue así.",
-            "Un pasito más cerca de la facultad de Medicina.",
-            "¡Orgulloso de ti! Tarea completada."
-        ];
-
-        function checkTask() {
-            const feedback = document.getElementById('checklist-feedback');
-            const randomIndex = Math.floor(Math.random() * mensajesChecklist.length);
-            
-            feedback.innerText = mensajesChecklist[randomIndex];
-            feedback.style.opacity = 1;
-
-            setTimeout(() => {
-                feedback.style.opacity = 0;
-            }, 3000);
-        }
     </script>
 </body>
 </html>
